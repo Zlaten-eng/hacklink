@@ -2,110 +2,109 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Join WinNow - Get Rewards!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bot Music Controller</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --primary: #0066ff;
-      --secondary: #f4f7fc;
-      --accent: #00cc99;
-    }
-
     body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: var(--secondary);
+      background: linear-gradient(135deg, #0d0d0d, #1c1c1c);
+      color: #ffffff;
+      font-family: 'Outfit', sans-serif;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-    }
-
-    .card {
-      background: #fff;
-      border-radius: 16px;
-      padding: 30px 25px;
-      max-width: 400px;
-      width: 90%;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-
-    .logo {
-      font-size: 1.8rem;
-      color: var(--primary);
-      font-weight: bold;
+      padding: 20px;
     }
 
     h2 {
-      margin-top: 10px;
-      color: #333;
+      margin-bottom: 20px;
     }
 
-    .ref-box {
-      margin: 20px 0;
-      background: var(--accent);
-      color: white;
-      padding: 10px 20px;
+    .music-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    input[type="text"] {
+      width: 300px;
+      padding: 10px;
       border-radius: 8px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      display: inline-block;
-    }
-
-    input[type="tel"] {
-      padding: 12px;
-      width: 100%;
-      margin-top: 10px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 1rem;
-    }
-
-    button {
-      margin-top: 15px;
-      background: var(--primary);
-      color: white;
       border: none;
-      padding: 12px;
-      width: 100%;
       font-size: 1rem;
-      border-radius: 8px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: bold;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      background-color: #4caf50;
       cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
     }
 
-    button:hover {
-      background: #004ecb;
+    .btn:hover {
+      background-color: #43a047;
+      transform: scale(1.05);
     }
 
-    .small-text {
-      margin-top: 15px;
-      font-size: 0.85rem;
-      color: #777;
-    }
-
-    @media (max-width: 500px) {
-      .card {
-        padding: 25px 15px;
-      }
+    footer {
+      margin-top: 40px;
+      color: #aaa;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <div class="logo">WinNow</div>
-    <h2>Claim Your Welcome Bonus!</h2>
-    <p>Use this exclusive referral code to get started:</p>
-    <div class="ref-box">REF2025</div>
 
-    <form action="#" method="POST">
-      <input type="tel" name="phone" placeholder="Enter your phone number" required />
-      <button type="submit">Join Now</button>
-    </form>
+  <h2>🎵 Bot Music Player</h2>
 
-    <div class="small-text">
-      By signing up, you agree to our <a href="#">Terms & Privacy</a>.
+  <div class="music-controls">
+    <input type="text" id="musicUrl" placeholder="Paste music URL (e.g., .mp3, .m4a)">
+    <div>
+      <button class="btn" onclick="playMusic()">Play</button>
+      <button class="btn" onclick="pauseMusic()">Pause</button>
     </div>
   </div>
+
+  <audio id="audio" loop></audio>
+
+  <footer>
+    HACKLINK TECH.INC &copy; <span id="currentYear"></span>
+  </footer>
+
+  <script>
+    const audio = document.getElementById('audio');
+    const musicUrlInput = document.getElementById('musicUrl');
+
+    function playMusic() {
+      const url = musicUrlInput.value.trim();
+      if (url) {
+        if (audio.src !== url) {
+          audio.src = url;
+        }
+        audio.play().catch(err => {
+          alert("Unable to play music. Check the URL or browser settings.");
+          console.error(err);
+        });
+      } else {
+        alert("Please enter a valid music URL.");
+      }
+    }
+
+    function pauseMusic() {
+      audio.pause();
+    }
+
+    document.getElementById("currentYear").textContent = new Date().getFullYear();
+  </script>
+
 </body>
 </html>
