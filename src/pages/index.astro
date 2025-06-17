@@ -1,110 +1,175 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bot Music Controller</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet" />
-  <style>
-    body {
-      background: linear-gradient(135deg, #0d0d0d, #1c1c1c);
-      color: #ffffff;
-      font-family: 'Outfit', sans-serif;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
 
-    h2 {
-      margin-bottom: 20px;
-    }
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { 
+  Bot, 
+  Coins, 
+  Users, 
+  TrendingUp, 
+  Plus,
+  Activity,
+  Clock,
+  CheckCircle
+} from "lucide-react";
 
-    .music-controls {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-    }
+interface DashboardOverviewProps {
+  userStats: {
+    totalBots: number;
+    activeBots: number;
+    totalEarnings: number;
+    referrals: number;
+    dailyCoins: number;
+    lastClaim: string;
+  };
+  onCreateBot: () => void;
+  onClaimDaily: () => void;
+  canClaimDaily: boolean;
+}
 
-    input[type="text"] {
-      width: 300px;
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-      font-size: 1rem;
-    }
+export default function DashboardOverview({ 
+  userStats, 
+  onCreateBot, 
+  onClaimDaily, 
+  canClaimDaily 
+}: DashboardOverviewProps) {
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-3xl font-bold text-gray-900">Dashboard</h2>
+        <Button onClick={onCreateBot}>
+          <Plus className="w-4 h-4 mr-2" />
+          Create New Bot
+        </Button>
+      </div>
 
-    .btn {
-      padding: 12px 24px;
-      font-size: 16px;
-      font-weight: bold;
-      text-transform: uppercase;
-      border: none;
-      border-radius: 10px;
-      color: white;
-      background-color: #4caf50;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
-    }
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Bots</CardTitle>
+            <Bot className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{userStats.totalBots}</div>
+            <p className="text-xs text-muted-foreground">
+              {userStats.activeBots} active
+            </p>
+          </CardContent>
+        </Card>
 
-    .btn:hover {
-      background-color: #43a047;
-      transform: scale(1.05);
-    }
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Earnings</CardTitle>
+            <Coins className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{userStats.totalEarnings}</div>
+            <p className="text-xs text-muted-foreground">
+              Coins earned
+            </p>
+          </CardContent>
+        </Card>
 
-    footer {
-      margin-top: 40px;
-      color: #aaa;
-      font-size: 14px;
-    }
-  </style>
-</head>
-<body>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Referrals</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{userStats.referrals}</div>
+            <p className="text-xs text-muted-foreground">
+              +10 coins each
+            </p>
+          </CardContent>
+        </Card>
 
-  <h2>🎵 Bot Music Player</h2>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Daily Bonus</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">10</div>
+            <p className="text-xs text-muted-foreground">
+              Coins per day
+            </p>
+          </CardContent>
+        </Card>
+      </div>
 
-  <div class="music-controls">
-    <input type="text" id="musicUrl" placeholder="Paste music URL (e.g., .mp3, .m4a)">
-    <div>
-      <button class="btn" onclick="playMusic()">Play</button>
-      <button class="btn" onclick="pauseMusic()">Pause</button>
+      {/* Daily Claim Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <Coins className="w-5 h-5 mr-2 text-yellow-600" />
+            Daily Coin Claim
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-lg font-semibold">Claim your daily 10 coins!</p>
+              <p className="text-sm text-gray-600">
+                Last claimed: {userStats.lastClaim || "Never"}
+              </p>
+            </div>
+            <Button 
+              onClick={onClaimDaily} 
+              disabled={!canClaimDaily}
+              className="bg-yellow-600 hover:bg-yellow-700"
+            >
+              {canClaimDaily ? (
+                <>
+                  <Coins className="w-4 h-4 mr-2" />
+                  Claim 10 Coins
+                </>
+              ) : (
+                <>
+                  <Clock className="w-4 h-4 mr-2" />
+                  Already Claimed
+                </>
+              )}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Recent Activity */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <Activity className="w-5 h-5 mr-2" />
+            Recent Activity
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex items-center space-x-3">
+              <CheckCircle className="w-5 h-5 text-green-500" />
+              <div>
+                <p className="text-sm font-medium">Bot "Customer Support" deployed</p>
+                <p className="text-xs text-gray-500">2 hours ago</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-3">
+              <Coins className="w-5 h-5 text-yellow-500" />
+              <div>
+                <p className="text-sm font-medium">Daily coins claimed (+10)</p>
+                <p className="text-xs text-gray-500">1 day ago</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-3">
+              <Users className="w-5 h-5 text-blue-500" />
+              <div>
+                <p className="text-sm font-medium">New referral joined (+10 coins)</p>
+                <p className="text-xs text-gray-500">3 days ago</p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
-  </div>
-
-  <audio id="audio" loop></audio>
-
-  <footer>
-    HACKLINK TECH.INC &copy; <span id="currentYear"></span>
-  </footer>
-
-  <script>
-    const audio = document.getElementById('audio');
-    const musicUrlInput = document.getElementById('musicUrl');
-
-    function playMusic() {
-      const url = musicUrlInput.value.trim();
-      if (url) {
-        if (audio.src !== url) {
-          audio.src = url;
-        }
-        audio.play().catch(err => {
-          alert("Unable to play music. Check the URL or browser settings.");
-          console.error(err);
-        });
-      } else {
-        alert("Please enter a valid music URL.");
-      }
-    }
-
-    function pauseMusic() {
-      audio.pause();
-    }
-
-    document.getElementById("currentYear").textContent = new Date().getFullYear();
-  </script>
-
-</body>
-</html>
+  );
+}
